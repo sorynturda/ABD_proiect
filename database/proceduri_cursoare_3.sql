@@ -58,3 +58,29 @@ BEGIN
     CLOSE cur_datornici;
 END;
 $$;
+-- 3.3 Procedura care va fi rulată de Job
+CREATE OR REPLACE PROCEDURE prc_job_verificare_itp_zilnic()
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_nr_expirate INT;
+BEGIN
+    SELECT COUNT(*) INTO v_nr_expirate 
+    FROM vehicule 
+    WHERE data_expirare_itp < CURRENT_DATE;
+
+    IF v_nr_expirate > 0 THEN
+        INSERT INTO log_operatiuni(nume_tabel, utilizator_db, tip_operatie, detalii)
+        VALUES (
+            'vehicule', 
+            'SYSTEM_JOB', 
+            'ALERT', 
+            jsonb_build_object('mesaj', 'Job zilnic: Vehicule cu ITP expirat identificate', 'cantitate', v_nr_expirate)
+        );
+        
+        RAISE NOTICE 'Job finalizat: Au fost gasite % vehicule cu ITP expirat.', v_nr_expirate;
+    ELSE
+        RAISE NOTICE 'Job finalizat: Nicio neregula gasita astazi.';
+    END IF;
+END;
+$$;
