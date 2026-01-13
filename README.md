@@ -1,14 +1,9 @@
-#### Run the following script to create the docker postgres database
+#### Run docker compose up to create the databases. If volume is cached, remove it. 
 
 ```bash
-$ ./create_docker_postgres.sh
+$ docker compose up -d --build
 ```
 
-then insinde the docker container, in **/scripts** folder run:
-
-```bash
-$ ./init_database.sh
-```
 
 this will create all the tables, procedures, triggers, cursors and views.
 
