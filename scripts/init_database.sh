@@ -11,5 +11,6 @@ psql -U "$DB_USER" -d "$DB_NAME" -v ON_ERROR_STOP=1 -f /scripts/triggere_2.sql
 psql -U "$DB_USER" -d "$DB_NAME" -v ON_ERROR_STOP=1 -f /scripts/proceduri_cursoare_3.sql
 psql -U "$DB_USER" -d "$DB_NAME" -v ON_ERROR_STOP=1 -f /scripts/vederi_4.sql
 psql -U "$DB_USER" -d "$DB_NAME" -v ON_ERROR_STOP=1 -f /scripts/securitate_triggere_5.sql
+psql -U "$DB_USER" -d "$DB_NAME" -v ON_ERROR_STOP=1 -f /scripts/creare_utilizatori.sql
 
 echo "Baza de date a fost inițializată cu succes"

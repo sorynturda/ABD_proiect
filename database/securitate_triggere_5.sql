@@ -23,6 +23,27 @@ END
 $$;
 
 -- Granturi
-GRANT SELECT, INSERT, UPDATE ON amenzi_emise, entitati TO ofiter_politie;
-GRANT SELECT ON amenzi_emise TO casier;
-GRANT INSERT ON plati TO casier;
+GRANT SELECT, INSERT, UPDATE
+ON ALL TABLES IN SCHEMA public
+TO ofiter_politie;
+
+GRANT EXECUTE
+ON ALL PROCEDURES IN SCHEMA public
+TO ofiter_politie;
+
+GRANT EXECUTE
+ON ALL FUNCTIONS IN SCHEMA public
+TO ofiter_politie;
+
+GRANT SELECT
+ON public.log_operatiuni
+TO ofiter_politie;
+
+GRANT SELECT
+ON public.amenzi_emise
+TO casier;
+
+GRANT INSERT
+ON public.plati
+TO casier;
+
