@@ -83,4 +83,44 @@ BEGIN
         RAISE NOTICE 'Job finalizat: Nicio neregula gasita astazi.';
     END IF;
 END;
+
+
+$$;
+-- 3.3 Procedura Reinnoire ITP
+CREATE OR REPLACE PROCEDURE prc_reinnoire_itp(
+    p_numar_inmatriculare VARCHAR,
+    p_statie_itp VARCHAR
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_vehicul_id INT;
+    v_data_noua DATE;
+BEGIN
+    SELECT id INTO v_vehicul_id FROM vehicule WHERE numar_inmatriculare = p_numar_inmatriculare;
+    
+    IF v_vehicul_id IS NULL THEN
+        RAISE EXCEPTION 'Vehiculul cu numarul % nu exista!', p_numar_inmatriculare;
+    END IF;
+
+    v_data_noua := CURRENT_DATE + INTERVAL '1 year';
+
+    UPDATE vehicule 
+    SET data_expirare_itp = v_data_noua 
+    WHERE id = v_vehicul_id;
+
+    INSERT INTO log_operatiuni(nume_tabel, utilizator_db, tip_operatie, detalii)
+    VALUES (
+        'vehicule', 
+        CURRENT_USER, 
+        'ITP_RENEW', 
+        jsonb_build_object(
+            'nr_inmatriculare', p_numar_inmatriculare, 
+            'statie', p_statie_itp,
+            'data_noua_expirare', v_data_noua
+        )
+    );
+
+    RAISE NOTICE 'ITP reinnoit cu succes pentru % pana la data de %', p_numar_inmatriculare, v_data_noua;
+END;
 $$;
